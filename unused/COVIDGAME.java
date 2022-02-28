@@ -14,7 +14,7 @@ public class COVIDGAME {
 		System.out.println("Wait, I got it! There�s the new COVID variant going around! I should make it!");
 		console.nextLine();
 		System.out.println("Problem is, I need to make sure my tracks are covered. I hope the hospital allows me in.");
-		gamestate = washingtonHospital(console, save, player);
+		washingtonHospital();
 		if (gamestate == true) {
 			pacificCommons(console, save, player);
 			lakeElizabeth();
@@ -25,122 +25,123 @@ public class COVIDGAME {
 		}
 	}
 	
-	public static boolean washingtonHospital(Scanner console, StorylineProgress save, Player player) throws IOException {
-		String choice;
-		Checks hospital = new Checks(false, false, false);
-		System.out.println("I�m here. There should be some COVID samples here. But� should I even do it?");
-		console.nextLine();
-		System.out.println("(Y) Yes I should do it! \n(N) No I shouldn't...");
-		choice = console.nextLine();
-		if (choice.equals("N")) {
-			return false;
-		} else if (choice.equals("Y")) {
-			System.out.println("Of course I should! In-person learning sucks! I should get going.");
-		} else {
-			System.out.println("Nothing? Whatever. I'll do it myself anyways");
-		}
-		
-		while (save.isHere()) {
-			if (hospital.getMapCheck() && hospital.getClipCheck() && hospital.getSecretaryCheck()) {
-				System.out.println("Looks like I found my way. I'll go now.");
-				console.nextLine();
-				save.noLongerHere();
-			} else {
-				System.out.print("A. Check in with the secretary \nB. Check the clipboard \nC. Check the map");
-				System.out.println();
-				choice = console.nextLine();
-				if (choice.equals("A")) {
-					System.out.println("Secretary: Hello, how can I help you? \nYou: I just wanted to go in, can I?");
-					console.nextLine();
-					System.out.println("Secretary: Sorry, only visitors are allowed. \nYou: Oh.");
-					System.out.println("A. Announce you're visiting someone. \nB. Leave.");
-					choice = console.nextLine();
-					if (choice.equals("A")) {
-						System.out.println("You: Ah yes, I'm here to visit someone.");
-						console.nextLine();
-						System.out.println("Secretary: Who're you visiting?");
-						if (hospital.getClipCheck()) {
-							System.out.println("You: Michael Liu");
-							console.nextLine();
-							System.out.println("Secretary: Alright, just go to the third floor and find room 101. Have a nice day.");
-							console.nextLine();
-							System.out.println("You: Too easy!");
-							console.nextLine();
-							hospital.secretaryChecked(true);
-							if (!hospital.getMapCheck()) {
-								System.out.println("Now I just need to know where to go.");
-							}
-						} else {
-							System.out.println("You: Uhhhh, Chuck Norris?");
-							System.out.println("Secretary: And I'm Bob Ross. Now who're you visiting?");
-							System.out.println("You: Nothing. I'll remember the name.");
-						}
-					} else {
-						System.out.println("You: Nothing. I'll just leave.");
-					}
-				} else if (choice.equals("B")) {
-					System.out.println("You pick up the clipboard. There's a list of patients on there.");
-					console.nextLine();
-					System.out.println("You: Wow. All these names. Daniel Sujef. Christina Chang. Oh, wait. Maybe Michael Liu will get me in!");
-					hospital.clipChecked(true);
-				} else if (choice.equals("C")) {
-					System.out.println("You: Doctor's office. There it is. Least I know where to go now.");
-					console.nextLine();
-					hospital.mapChecked(true);
-				}
-			}
-		}
-		
-		System.out.println("Looks like I'm at the office. Now, where would that COVID sample be?");
-		console.nextLine();
-		System.out.println("Well, definitely not in the safe box.");
-		save.newLocation();   
-		ImgShow img = new ImgShow();
-		
-		img.showShelf();
-		while (save.isHere()) {
-			System.out.print("1. Check the bottle of pills.\n2. Check the mask box\n3. Check the hand sanitizer\n");
-			System.out.print("4. Check the teddy bear\n5. Check the graduate cylinder\n6. Check the Ointment\n");
-			System.out.println("7. Check the mug\n8. Check the paper bag\n9. Crack the safe.");
-			int observe = console.nextInt();
-			if (observe == 1) {
-				System.out.println("3 miligrams of dosage per day. OH WHAT IS THAT SMELL?!");
-				img.showPills();
-			} else if (observe == 2) {
-				System.out.println("Wow, only two masks? And I thought the shortages were over.");
-				img.showMaskBox();
-			} else if (observe == 3) {
-				System.out.println("Don�t need it. I�m not touching much.");
-				img.showHandSanitizer();
-			} else if (observe == 4) {
-				System.out.println("Wow. Wonder why a doctor still needs this.");
-				img.showTeddyBear();
-			} else if (observe == 5) {
-				System.out.println("This doctor�s weird. Only 5 mLs.");
-				img.showGraduateCylinder();
-			} else if (observe == 6) {
-				System.out.println("Take 9 times a day. Who does that? Unless�");
-				img.showOintment();
-			} else if (observe == 7) {
-				System.out.println("#1 boss. How egotistical.");
-				img.showMug();
-			} else if (observe == 8) {
-				System.out.println("Pickup prescription: 1. Bottle, 2. Ointment, 3. Graduate. Weirdest list ever.");
-				img.showPaperBag();
-			} else if (observe == 9) {
-				System.out.println("Huh, a lotta geometric stickers. I'll take a crack at it.");
-				img.showSafe();
-				console.nextLine();
-				System.out.println("Type in the shape's name to proceed (case sensitive, in format of shape, shape, shape)");
-				String crack = console.nextLine();
-				if (hospital.checkCombo(crack)) {
-					save.hospitalDone(console, save, player);
-				} else {
-					System.out.println("Not the right combination I guess.");
-				}
-			}
-		}
-		return true;
+	public static void washingtonHospital(){
+		Scanner nines = new Scanner(System.in);
+
+        Image pill = new Image("pill bottle.png");
+        Image bear = new Image("teddy bear.png");
+        Image masks = new Image("masks.png");
+        Image cylinder = new Image("graduated cylinder.png");
+        Image sanitizer = new Image("hand sanitizer.png");
+        Image hospitalShelf = new Image("hospital shelf.png");
+        Image syrup = new Image("syrup bottle.png");
+        Image mug = new Image("#1 Mug.png");
+        Image ointment = new Image("ointment.png");
+        Image safe = new Image("safe.png");
+        Image bag = new Image("paper bag.png");
+
+        boolean runHospital = true;
+        boolean enterCombo = true;
+        boolean rightCombo = true;
+        String guess;
+        int slotCount = 1;
+        hospitalShelf.show(true);
+
+        int input;
+        int input2;
+
+        while (runHospital){
+            System.out.println("Select an object to view");
+            input = nines.nextInt();
+            nines.nextLine();
+
+            if (input == 1){
+                System.out.println("A pill bottle:\nFull of yellow tablets with an odd perscription.");
+                pill.show(true);
+            }
+            else if (input == 2){
+                System.out.println("A box of masks:\nSingle-use, surgical mask with three layers.");
+                masks.show(true);
+            }
+            else if (input == 3){
+                System.out.println("A bottle of hand sanitizer:\nPurell advanced hand sanitizer 70% alcohol.");
+                sanitizer.show(true);
+            }
+            else if (input == 4){
+                System.out.println("A teddy bear:\nSlightly worn, well-loved.");
+                bear.show(true);
+            }
+            else if (input == 5){
+                System.out.println("A graduated cylinder:\nSeems to contain a viscous yellow liquid.");
+                cylinder.show(true);
+            }
+            else if (input == 6){
+                System.out.println("A plastic bottle:\nYou shake it. It is empty.");
+                syrup.show(true);
+            }
+            else if (input == 7){
+                System.out.println("A tube of ointment:\n9 oz large size tube.");
+                ointment.show(true);
+            }
+            else if (input == 8){
+                System.out.println("A mug:\nSays #1 boss. The coffee is still warm.");
+                mug.show(true);
+            }
+            else if (input == 9){
+                System.out.println("Pharmacy bag:\nNote says \"FOR PICKUP\"\nPerscription:\n1. Pills\n2. Ointment\n3. Cough Syrup");
+                bag.show(true);
+            }
+            else if (input == 10){
+                System.out.println("Locked cabinet:\nWhat you're looking for might be in this safe. Its door has three slots and is covered with drawings of shapes.");
+                safe.show(true);
+                System.out.println("Input code? Y/N");
+                while(enterCombo){
+                    if (nines.nextLine().equals("Y")){
+                        while(slotCount <= 3){
+                            System.out.println("Slot " + slotCount + ": ___");
+                            guess = nines.nextLine();
+                            if ((slotCount == 1 && (!guess.equals("triangle") && !guess.equals("trigon")))
+                                || (slotCount == 2 && (!guess.equals("nonagon") && !guess.equals("enneagon") && !guess.equals("9-gon")))
+                                || (slotCount == 3 && (!guess.equals("hexadecagon") && !guess.equals("hexakaidecagon") && !guess.equals("16-gon")))){
+                                rightCombo = false;
+                            }
+                            slotCount++;
+                        }
+                        if (rightCombo){
+                            System.out.println("Success! The safe door swings open.");
+                            System.out.println("You pull out a vial containing a highly virulent sample of COVID-19 and put carefully store it away on your person. ");
+                            enterCombo = false;
+                        }
+                        else{
+                            System.out.println("The door doesn't budge.\nTry again? Y/N");
+                        }
+                        slotCount = 1;
+                        rightCombo = true;
+                    }
+                    else{
+                        enterCombo = false;
+                    }
+                }
+            }
+
+            System.out.println("Press 1 to exit");
+            input2 = nines.nextInt();
+            nines.nextLine();
+
+            if (input2 == 1){
+                input = 0;
+                bear.show(false);
+                pill.show(false);
+                cylinder.show(false);
+                sanitizer.show(false);
+                masks.show(false);
+                syrup.show(false);
+                ointment.show(false);
+                mug.show(false);
+                bag.show(false);
+                safe.show(false);
+            }
+        }
 	}
 	
 	public static void pacificCommons(Scanner console, StorylineProgress save, Player player) {

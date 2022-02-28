@@ -8,7 +8,7 @@ public class Image {
     private JLabel label;
 
     public Image(String filename){
-        String path = "C:\\Users\\ju_w9\\Desktop\\School 2021-2022\\AP CS\\DiseaseCorp\\Imgs\\" + filename;
+        String path = "assets/" + filename;
         frame = new JFrame();
         icon = new ImageIcon(path);
         label = new JLabel(icon);
